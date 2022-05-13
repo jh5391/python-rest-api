@@ -1,0 +1,6 @@
+__pycache__
+mysql_data
+bin
+include
+lib
+pyvenv.cfg
