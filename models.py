@@ -25,10 +25,10 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String(30), nullable=False, unique=True)
-    password = Column(String(30), nullable=False)
+    password = Column(String(100), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
-    post = relationship("Post")
+    # post = relationship("Post")
     
 class Post(Base):
     __tablename__ = "posts"
@@ -37,7 +37,8 @@ class Post(Base):
     content = Column(String(100), nullable=False)
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
-    user_id = Column(Integer, ForeignKey('users.id'))
+    user_id = Column(Integer, ForeignKey('users.id'))   
+    user = relationship("User")
             
 if __name__ == "__main__":
     Base.metadata.create_all(bind=engine)

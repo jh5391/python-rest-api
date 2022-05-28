@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 #from fastapi.middleware.cors import CORSMiddleware
-from api import user, post
+from api import user, post, auth
 #from .config import settings
 
 app = FastAPI()
@@ -17,6 +17,7 @@ origins = ["*"]
 
 app.include_router(post.router)
 app.include_router(user.router)
+app.include_router(auth.router)
 
 @app.get("/")
 def root():
