@@ -32,10 +32,8 @@ class Post(PostBase):
     class Config:
         orm_mode = True
 
-
 class PostOut(BaseModel):
     Post: Post
-#    votes: int
 
     class Config:
         orm_mode = True
@@ -46,3 +44,24 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+    
+class ReplyBase(BaseModel):
+    post_id: int
+    comment: str
+    
+class ReplyCreate(ReplyBase):
+    pass
+    
+class Reply(ReplyBase):
+    id: int
+    created_at: datetime
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+class ReplyOut(BaseModel):
+    Reply: Reply
+
+    class Config:
+        orm_mode = True

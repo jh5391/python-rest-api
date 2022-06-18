@@ -39,6 +39,15 @@ class Post(Base):
                         nullable=False, server_default=text('now()'))
     user_id = Column(Integer, ForeignKey('users.id'))   
     user = relationship("User")
+    
+class Reply(Base):
+    __tablename__ = "replys"
+    id = Column(Integer, primary_key=True, nullable=False)
+    comment = Column(String(100), nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True),
+                        nullable=False, server_default=text('now()'))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    post_id = Column(Integer, ForeignKey('posts.id'))
             
 if __name__ == "__main__":
     Base.metadata.create_all(bind=engine)
