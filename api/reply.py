@@ -36,44 +36,45 @@ def get_replys(id: int, db: Session = Depends(models.get_db), current_user: int 
     return replys
 
 
-# @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-# def delete_reply(id: int, db: Session = Depends(models.get_db), current_user: int = Depends(oauth2.get_current_user)):
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_reply(id: int, db: Session = Depends(models.get_db), current_user: int = Depends(oauth2.get_current_user)):
 
-#     post_query = db.query(models.Post).filter(models.Post.id == id)
+    reply_query = db.query(models.Reply).filter(models.Reply.id == id)
 
-#     post = post_query.first()
+    reply = reply_query.first()
 
-#     if post == None:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-#                             detail=f"post with id: {id} does not exist")
+    if reply == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"reply with id: {id} does not exist")
 
-#     if post.user_id != current_user.id:
-#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-#                             detail="Not authorized to perform requested action")
+    if reply.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Not authorized to perform requested action")
 
-#     post_query.delete(synchronize_session=False)
-#     db.commit()
+    reply_query.delete(synchronize_session=False)
 
-#     return Response(status_code=status.HTTP_204_NO_CONTENT)
+    db.commit()
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-# @router.put("/{id}", response_model=schemas.Post)
-# def update_reply(id: int, updated_post: schemas.PostCreate, db: Session = Depends(models.get_db), current_user: int = Depends(oauth2.get_current_user)):
+@router.put("/{id}", response_model=schemas.Reply)
+def update_reply(id: int, updated_reply: schemas.ReplyCreate, db: Session = Depends(models.get_db), current_user: int = Depends(oauth2.get_current_user)):
+    
+    reply_query = db.query(models.Reply).filter(models.Reply.id == id)
 
-#     post_query = db.query(models.Post).filter(models.Post.id == id)
+    reply = reply_query.first()
 
-#     post = post_query.first()
+    if reply == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"reply with id: {id} does not exist")
 
-#     if post == None:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-#                             detail=f"post with id: {id} does not exist")
+    if reply.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail="Not authorized to perform requested action")
 
-#     if post.user_id != current_user.id:
-#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-#                             detail="Not authorized to perform requested action")
+    reply_query.update(updated_reply.dict(), synchronize_session=False)
 
-#     post_query.update(updated_post.dict(), synchronize_session=False)
+    db.commit()
 
-#     db.commit()
-
-#     return post_query.first()
+    return reply_query.first()
