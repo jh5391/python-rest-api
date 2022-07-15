@@ -28,17 +28,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
     - name: Create .env file
       run: |
-        echo "database_hostname="127.0.0.1"" >> .env
-        echo "database_port=3306" >> .env
-        echo "database_password="1234"" >> .env
-        echo "database_name="python_rest_api"" >> .env
-        echo "database_username="root"" >> .env
-        echo "secret_key="test"" >> .env
-        echo "algorithm="HS256"" >> .env
-        echo "access_token_expire_minutes=30" >> .env
+        jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
         cat .env
+      env:
+        SECRETS_CONTEXT: ${{ toJson(secrets) }}
+        
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
