@@ -33,6 +33,10 @@ jobs:
       run: |
         jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
         cat .env
+        cat ./env | while read line; do
+          export $line
+        done
+
       env:
         SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
