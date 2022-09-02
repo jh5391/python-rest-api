@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from .config import settings
+from sqlalchemy_utils import database_exists, create_database
 
 SQLALCHEMY_DATABASE_URL = f"mysql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
 
@@ -58,4 +59,6 @@ class Reply(Base):
 
 
 if __name__ == "__main__":
+    if not database_exists(engine.url):
+        create_database(engine.url)
     Base.metadata.create_all(bind=engine)
