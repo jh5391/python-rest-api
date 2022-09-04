@@ -51,6 +51,7 @@ jobs:
 
     - name: Test with pytest
       run: |
+        sleep 15
         pytest -v tests
 
     - name: docker versioning
