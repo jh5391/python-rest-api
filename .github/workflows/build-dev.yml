@@ -51,7 +51,11 @@ jobs:
 
     - name: Test with pytest
       run: |
-        sleep 15
+        until [`mysqladmin ping -h ${DATABASE_HOST} -u ${DATABASE_USERNAME} -p ${DATABASE_PASSWORD}`]
+        do
+          sleep 5;
+        done
+
         pytest -v tests
 
     - name: docker versioning
