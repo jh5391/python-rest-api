@@ -15,28 +15,28 @@ class Settings(BaseSettings):
         env_file = ".env"
         fields = {
                     'database_hostname': {
-                        'env': 'database_hostname',
+                        'env': 'DATABASE_HOSTNAME',
                     },
                     'database_port': {
-                        'env': 'database_port',
+                        'env': 'DATABASE_PORT',
                     },
                     'database_password': {
-                        'env': 'database_password',
+                        'env': 'DATABASE_PASSWORD',
                     },
                     'database_name': {
-                        'env': 'database_name',
+                        'env': 'DATABASE_NAME',
                     },
                     'database_username': {
-                        'env': 'database_username',
+                        'env': 'DATABASE_USERNAME',
                     },
                     'secret_key': {
-                        'env': 'secret_key',
+                        'env': 'SECRET_KEY',
                     },
                     'algorithm': {
-                        'env': 'algorithm',
+                        'env': 'ALGORITHM',
                     },
                     'access_token_expire_minutes': {
-                        'env': 'access_token_expire_minutes',
+                        'env': 'ACCESS_TOKEN_EXPIRE_MINUTES',
                     },
                 }
 
