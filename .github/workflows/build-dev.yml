@@ -51,9 +51,16 @@ jobs:
 
     - name: Test with pytest
       run: |
-        until [`mysqladmin ping -h ${DATABASE_HOST} -u ${DATABASE_USERNAME} -p"${DATABASE_PASSWORD}"`]
+        time=0
+        until [`mysqladmin ping -u ${DATABASE_USERNAME} -p"${DATABASE_PASSWORD}" -h ${DATABASE_HOST}`]
         do
           sleep 5;
+          time=$(time+1)
+          if [ $time -gt 10 ]
+          then
+            echo "mysql health check failed"
+            break
+          fi
         done
 
         pytest -v tests
