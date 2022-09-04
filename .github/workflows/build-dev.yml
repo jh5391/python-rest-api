@@ -52,7 +52,7 @@ jobs:
     - name: Test with pytest
       run: |
         time=0
-        until [`mysqladmin ping -u ${DATABASE_USERNAME} -p"${DATABASE_PASSWORD}" -h ${DATABASE_HOSTNAME}`]
+        until [`mysqladmin ping -u"${DATABASE_USERNAME}" -p"${DATABASE_PASSWORD}" -h"${DATABASE_HOSTNAME}"`]
         do
           sleep 5;
           time=$(time+1)
