@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: str
 
     class Config:
-#        env_file = "../.env"'
+        env_file = ".env"
         fields = {
                     'database_hostname': {
                         'env': 'database_hostname',
