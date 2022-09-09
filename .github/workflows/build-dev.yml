@@ -51,17 +51,7 @@ jobs:
 
     - name: Test with pytest
       run: |
-        time=0
-        until [`mysqladmin ping -u"${{ secrets.DATABASE_USERNAME }}" -p"${{ secrets.DATABASE_PASSWORD }}" -h"${{ secrets.DATABASE_HOSTNAME }}"`]
-        do
-          sleep 5;
-          time=$(time+1)
-          if [ $time -gt 10 ]
-          then
-            echo "mysql health check failed"
-            break
-          fi
-        done
+        timeout 30 sh -c "until mysqladmin ping -u"${{ secrets.DATABASE_USERNAME }}" -p"${{ secrets.DATABASE_PASSWORD }}" -h"${{ secrets.DATABASE_HOSTNAME }}"; do echo .; sleep 5; done >/dev/null" >/dev/null
         pytest -v tests
 
     - name: docker versioning
