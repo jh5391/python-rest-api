@@ -29,15 +29,22 @@ def create_reply(
     return new_reply
 
 
-@router.get("/{id}", response_model=List[schemas.Reply])
+@router.get("/{post_id}", response_model=List[schemas.Reply])
 def get_replys(
-    id: int,
+    post_id: int,
     db: Session = Depends(models.get_db),
     current_user: int = Depends(oauth2.get_current_user),
 ):
+    post = post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    
+    if not post:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"post with id: {id} was not found",
+        )
 
-    replys = db.query(models.Reply).filter(models.Reply.post_id == id).all()
-
+    replys = db.query(models.Reply).filter(models.Reply.post_id == post_id).all()
+    
     return replys
 
 

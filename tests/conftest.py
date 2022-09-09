@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 from app.main import app
 from app.config import settings
 from app.models import get_db
@@ -12,7 +11,6 @@ from app import models
 from sqlalchemy_utils import database_exists, create_database
 
 
-# SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:password123@localhost:5432/fastapi_test'
 SQLALCHEMY_DATABASE_URL = f"mysql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}_test"
 
 
@@ -110,3 +108,35 @@ def test_posts(test_user, session, test_user2):
 
     posts = session.query(models.Post).all()
     return posts
+
+@pytest.fixture
+def test_replys(test_user, session, test_posts):
+    replys_data = [
+        {
+            "post_id": f"{test_posts[0].id}",
+            "comment": "first comment",
+            "user_id": test_user["id"],
+        },
+        {
+            "post_id": f"{test_posts[0].id}",
+            "comment": "Second comment",
+            "user_id": test_user["id"],
+        },        {
+            "post_id": f"{test_posts[0].id}",
+            "comment": "Third comment",
+            "user_id": test_user["id"],
+        },
+    ]
+
+    def create_reply_model(reply):
+        return models.Reply(**reply)
+
+    reply_map = map(create_reply_model, replys_data)
+    replys = list(reply_map)
+
+    session.add_all(replys)
+
+    session.commit()
+    replys = session.query(models.Reply).filter(models.Reply.post_id == test_posts[0].id).all()
+
+    return replys
