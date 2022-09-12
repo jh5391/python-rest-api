@@ -58,20 +58,21 @@ def delete_reply(
     reply_query = db.query(models.Reply).filter(models.Reply.id == id)
 
     reply = reply_query.first()
-
+    
+    if reply == None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"reply with id: {id} does not exist",
+        )
+    
     reply_join = (
         db.query(models.Post, models.Reply)
         .join(models.Reply, models.Reply.post_id == models.Post.id)
         .filter(models.Reply.id == id)
         .first()
     )
+    
     owner_id = reply_join[0].user_id
-
-    if reply == None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"reply with id: {id} does not exist",
-        )
 
     if reply.user_id != current_user.id or owner_id != current_user.id:
         raise HTTPException(
@@ -97,6 +98,12 @@ def update_reply(
     reply_query = db.query(models.Reply).filter(models.Reply.id == id)
 
     reply = reply_query.first()
+    
+    if reply == None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"reply with id: {id} does not exist",
+        )
 
     reply_join = (
         db.query(models.Post, models.Reply)
@@ -105,12 +112,6 @@ def update_reply(
         .first()
     )
     owner_id = reply_join[0].user_id
-
-    if reply == None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"reply with id: {id} does not exist",
-        )
 
     if reply.user_id != current_user.id or owner_id != current_user.id:
         raise HTTPException(

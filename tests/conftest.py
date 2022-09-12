@@ -121,7 +121,8 @@ def test_replys(test_user, session, test_posts):
             "post_id": f"{test_posts[0].id}",
             "comment": "Second comment",
             "user_id": test_user["id"],
-        },        {
+        },        
+        {
             "post_id": f"{test_posts[0].id}",
             "comment": "Third comment",
             "user_id": test_user["id"],
@@ -138,5 +139,28 @@ def test_replys(test_user, session, test_posts):
 
     session.commit()
     replys = session.query(models.Reply).filter(models.Reply.post_id == test_posts[0].id).all()
+
+    return replys
+
+@pytest.fixture
+def test_replys2(session, test_posts, test_user2):
+    replys_data = [      
+        {
+            "post_id": f"{test_posts[3].id}",
+            "comment": "test_user2_comment",
+            "user_id": test_user2["id"],
+        },
+    ]
+
+    def create_reply_model(reply):
+        return models.Reply(**reply)
+
+    reply_map = map(create_reply_model, replys_data)
+    replys = list(reply_map)
+
+    session.add_all(replys)
+
+    session.commit()
+    replys = session.query(models.Reply).filter(models.Reply.post_id == test_posts[3].id).all()
 
     return replys
