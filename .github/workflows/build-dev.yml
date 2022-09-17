@@ -16,6 +16,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env: 
+      - BUILD_VERSION: latest
 
     steps:
     - uses: actions/checkout@v3
@@ -23,36 +25,47 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.9"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        
-    - name: Create .env file
-      run: |
-        jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
-        cat .env
 
-      env:
-        SECRETS_CONTEXT: ${{ toJson(secrets) }}
-
-    # need checkout before using compose-action
-    - uses: isbang/compose-action@v1.2.0
+    - name: Login to DockerHub
+    - uses: docker/login-action@v2
       with:
-        compose-file: "./docker-compose-db.yml"
-        
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        # flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        # flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Test with pytest
+    - name: docker-compose-db
       run: |
-        timeout 30 sh -c "until mysqladmin ping -u"${{ secrets.DATABASE_USERNAME }}" -p"${{ secrets.DATABASE_PASSWORD }}" -h"${{ secrets.DATABASE_HOSTNAME }}"; do echo .; sleep 5; done >/dev/null" >/dev/null
-        pytest -v tests
+        docker-compose -f docker-compose-db.yml up -d
+
+    # - name: Install dependencies
+    #   run: |
+    #     python -m pip install --upgrade pip
+    #     pip install flake8 pytest
+    #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    # - name: Create .env file
+    #   run: |
+    #     jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
+    #     cat .env
+
+    #   env:
+    #     SECRETS_CONTEXT: ${{ toJson(secrets) }}
+
+    # # need checkout before using compose-action
+    # - uses: isbang/compose-action@v1.2.0
+    #   with:
+    #     compose-file: "./docker-compose-db.yml"
+        
+    # - name: Lint with flake8
+    #   run: |
+    #     # stop the build if there are Python syntax errors or undefined names
+    #     # flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+    #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+    #     # flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    # - name: Test with pytest
+    #   run: |
+    #     timeout 30 sh -c "until mysqladmin ping -u"${{ secrets.DATABASE_USERNAME }}" -p"${{ secrets.DATABASE_PASSWORD }}" -h"${{ secrets.DATABASE_HOSTNAME }}"; do echo .; sleep 5; done >/dev/null" >/dev/null
+    #     pytest -v tests
 
     - name: docker versioning
       run: |

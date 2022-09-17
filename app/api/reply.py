@@ -36,7 +36,7 @@ def get_replys(
     current_user: int = Depends(oauth2.get_current_user),
 ):
     post = post = db.query(models.Post).filter(models.Post.id == post_id).first()
-    
+
     if not post:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -44,7 +44,7 @@ def get_replys(
         )
 
     replys = db.query(models.Reply).filter(models.Reply.post_id == post_id).all()
-    
+
     return replys
 
 
@@ -58,20 +58,20 @@ def delete_reply(
     reply_query = db.query(models.Reply).filter(models.Reply.id == id)
 
     reply = reply_query.first()
-    
+
     if reply == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"reply with id: {id} does not exist",
         )
-    
+
     reply_join = (
         db.query(models.Post, models.Reply)
         .join(models.Reply, models.Reply.post_id == models.Post.id)
         .filter(models.Reply.id == id)
         .first()
     )
-    
+
     owner_id = reply_join[0].user_id
 
     if reply.user_id != current_user.id or owner_id != current_user.id:
@@ -98,7 +98,7 @@ def update_reply(
     reply_query = db.query(models.Reply).filter(models.Reply.id == id)
 
     reply = reply_query.first()
-    
+
     if reply == None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

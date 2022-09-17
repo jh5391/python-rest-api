@@ -109,6 +109,7 @@ def test_posts(test_user, session, test_user2):
     posts = session.query(models.Post).all()
     return posts
 
+
 @pytest.fixture
 def test_replys(test_user, session, test_posts):
     replys_data = [
@@ -121,7 +122,7 @@ def test_replys(test_user, session, test_posts):
             "post_id": f"{test_posts[0].id}",
             "comment": "Second comment",
             "user_id": test_user["id"],
-        },        
+        },
         {
             "post_id": f"{test_posts[0].id}",
             "comment": "Third comment",
@@ -138,13 +139,18 @@ def test_replys(test_user, session, test_posts):
     session.add_all(replys)
 
     session.commit()
-    replys = session.query(models.Reply).filter(models.Reply.post_id == test_posts[0].id).all()
+    replys = (
+        session.query(models.Reply)
+        .filter(models.Reply.post_id == test_posts[0].id)
+        .all()
+    )
 
     return replys
 
+
 @pytest.fixture
 def test_replys2(session, test_posts, test_user2):
-    replys_data = [      
+    replys_data = [
         {
             "post_id": f"{test_posts[3].id}",
             "comment": "test_user2_comment",
@@ -161,6 +167,10 @@ def test_replys2(session, test_posts, test_user2):
     session.add_all(replys)
 
     session.commit()
-    replys = session.query(models.Reply).filter(models.Reply.post_id == test_posts[3].id).all()
+    replys = (
+        session.query(models.Reply)
+        .filter(models.Reply.post_id == test_posts[3].id)
+        .all()
+    )
 
     return replys

@@ -1,21 +1,13 @@
 # 파일 규격 버전
 version: "3"
-# 이 항목 밑에 실행하려는 컨테이너 들을 정의
+
 services: 
-  # 서비스 명
   python-rest-api:
-    #container 생성시 사용 할 이미지 지정
-    image: python-rest-api:latest
-    #build 옵션
-    # docker-compose build 옵션에서 사용 됩니다.
-    # dockerfile에 명시된 FROM의 image를 사용하여 위에 명시된image 이름과 tag로 새로운 image를 생성 합니다.
+    image: python-rest-api:${BUILD_VERSION:-0.0.0}
     build:
-      #dockerfile의 위치를 지정 합니다.
       context: .
-    #container port mapping 정보
     ports:
         - "80:80"
-    #환경 변수 리스트를 정의
     environment:
       database_hostname: "${database_hostname}"
       database_port: "${database_port}"
