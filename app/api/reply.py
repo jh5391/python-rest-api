@@ -59,7 +59,7 @@ def delete_reply(
 
     reply = reply_query.first()
 
-    if reply == None:
+    if reply is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"reply with id: {id} does not exist",
@@ -99,7 +99,7 @@ def update_reply(
 
     reply = reply_query.first()
 
-    if reply == None:
+    if reply is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"reply with id: {id} does not exist",

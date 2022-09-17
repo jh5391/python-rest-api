@@ -71,7 +71,7 @@ def delete_post(
 
     replys_query = db.query(models.Reply).filter(models.Reply.post_id == id)
 
-    if post == None:
+    if post is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"post with id: {id} does not exist",
@@ -101,7 +101,7 @@ def update_post(
 
     post = post_query.first()
 
-    if post == None:
+    if post is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"post with id: {id} does not exist",

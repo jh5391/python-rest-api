@@ -2,18 +2,15 @@
 version: "3"
 
 services: 
-  python-rest-api:
+  development:
+    image: jhlee5391/python-rest-api:devlopment
+    build:
+      context: .
+    ports:
+        - "80:80"
+  versioning:
     image: jhlee5391/python-rest-api:${BUILD_VERSION:-0.0.0}
     build:
       context: .
     ports:
         - "80:80"
-    environment:
-      database_hostname: "${database_hostname}"
-      database_port: "${database_port}"
-      database_password: "${database_password}"
-      database_name: "${database_name}"
-      database_username: "${database_username}"
-      secret_key: "${secret_key}"
-      algorithm: "${algorithm}"
-      access_token_expire_minutes: "${access_token_expire_minutes}"

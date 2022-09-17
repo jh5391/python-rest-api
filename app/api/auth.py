@@ -20,12 +20,12 @@ def login(
 
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials"
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
         )
 
     if not utils.verify(user_credentials.password, user.password):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials"
+            status_code=status.HTTP_403_FORBIDDEN, detail="Invalid Credentials"
         )
 
     access_token = oauth2.create_access_token(data={"user_id": user.id})
