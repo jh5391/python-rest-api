@@ -28,7 +28,7 @@ jobs:
         token: ${{secrets.github_token}}        
      
     - name: Print generated build number
-      run: echo Build number is $BUILD_NUMBER
+      run: echo $GITHUB_RUN_NUMBER
       
 #     - name: Set up Python 3.9
 #       uses: actions/setup-python@v3
