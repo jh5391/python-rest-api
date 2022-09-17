@@ -35,6 +35,10 @@ jobs:
     - name: docker-compose-db
       run: |
         docker-compose -f docker-compose-db.yml up -d
+        
+    - name: docker-compose-dev
+      run: |
+        docker-compose -f docker-compose-dev.yml build python-rest-api
 
     # - name: Install dependencies
     #   run: |
