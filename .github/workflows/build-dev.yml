@@ -16,8 +16,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env: 
-      - BUILD_VERSION: latest
+    env:
+      BUILD_VERSION: latest
 
     steps:
     - uses: actions/checkout@v3
