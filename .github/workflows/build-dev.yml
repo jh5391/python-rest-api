@@ -20,12 +20,7 @@ jobs:
       BUILD_VERSION: latest
 
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Generate build number
-      uses: einaregilsson/build-number@v1 
-      with: 
-        token: ${{secrets.github_token}}        
+    - uses: actions/checkout@v3    
      
     - name: Print generated build number
       run: echo $GITHUB_RUN_NUMBER
