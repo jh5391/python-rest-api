@@ -53,3 +53,10 @@ def get_current_user(
     user = db.query(models.User).filter(models.User.id == token.id).first()
 
     return user
+
+
+def get_token_email(token: str):
+    token_data = token.split(" ")[1]
+    payload = jwt.decode(token_data, SECRET_KEY, algorithms=[ALGORITHM])
+    user_email: str = payload.get("user_email")
+    return user_email
